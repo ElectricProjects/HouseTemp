@@ -12,7 +12,7 @@ MilliTimer readoutTimer, aliveTimer;
 
 void setup() {
   tmp.mode2(INPUT);
-  rf12_initialize(1, RF12_433MHZ, 100);
+  rf12_initialize(1, RF12_433MHZ, 75);
   rf12_easyInit(15); // every 10 seconds send out pkg
   Serial.begin(57600);
   delay(50);//wait for power to settle

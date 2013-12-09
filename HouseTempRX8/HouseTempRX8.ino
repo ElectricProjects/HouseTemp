@@ -50,7 +50,7 @@ void setup () {
   ledThree.mode(OUTPUT); //digital pin for speaker
   ledThree.mode2(OUTPUT); // analog pin for red led
 
-  rf12_initialize('R', RF12_433MHZ, 100);
+  rf12_initialize('R', RF12_433MHZ, 75);
   ledOne.digiWrite(1);
   ledTwo.digiWrite(1);
   ledTwo.digiWrite2(0);
