@@ -3,7 +3,7 @@
 // digiRead() & digiWrite() - ports D pin
 // anaRead() & digiWrite2() - Ports A pin 
 // mode sets Digital pin mode2 sets ports Analog pin
-// 11/21/13 Todd Miller GreenhouseRX8
+// 12/9/13 Todd Miller based on GreenhouseRX8
 
 #include <JeeLib.h>
 #include <PortsLCD.h>
@@ -111,7 +111,7 @@ void loop () {
       lcd.print(tmpHigh);
       lcd.setCursor(15, 3);
       lcd.print(tmpLow);
-      // lcd.print((int) rf12_hdr);
+      //lcd.print((int) rf12_hdr);
     }
 
     if (RF12_WANTS_ACK)
@@ -160,7 +160,7 @@ void redLed()
   if(r==0 || y==1){
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print(F("Check greenhouse!"));
+    lcd.print(F("Check temp!"));
     lcd.setCursor(0, 1);
     lcd.print(F("Current Temp:"));
     lcd.setCursor(14, 1);
@@ -186,9 +186,9 @@ void redLed()
 void homeScreen()
 {
   lcd.clear();
-  lcd.print(F("Snowdrift Farms"));
+  lcd.print(F("Miller House"));
   lcd.setCursor(0, 1);
-  lcd.print(F("Greenhouse Monitor"));
+  lcd.print(F("Temp Monitor"));
   lcd.setCursor(0, 2);
   lcd.print(F("Current Temp: "));
   lcd.setCursor(0, 3);
