@@ -91,7 +91,7 @@ void loop () {
       }
     }
 
-    if(rf12_data[0] <tmpLow)
+    if(rf12_data[0] <tmpLow && rf12_data[0]>tmpLow-20)
       tmpLow=rf12_data[0];
 
     if(rf12_data[0] >tmpHigh)
