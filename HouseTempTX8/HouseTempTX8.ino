@@ -35,8 +35,6 @@ measurement.lobat = 0;
 }
 
 void loop() {
-
-
 value = tmp.anaRead();
   set_sleep_mode(SLEEP_MODE_IDLE);
   sleep_mode();
@@ -59,7 +57,7 @@ byte sending =  rf12_easySend(&measurement, sizeof measurement);
       rf12_sleep(-1); // turn the radio back on
       Serial.println("Sending data");
       Serial.println(measurement.light);
-      Serial.print(measurement.wind);
+      Serial.println(measurement.wind);
     radioIsOn = 1;
   }
 }

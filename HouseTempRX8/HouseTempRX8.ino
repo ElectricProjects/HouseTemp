@@ -31,11 +31,11 @@ int pkg3=0;
 int yCount = 0;
 
 typedef struct {
-byte light;
-byte wind :1;
-byte humi :7;
-int temp :10;
-byte lobat :1;
+  byte temp;
+  byte humi :1;
+  byte wind :7;
+  int rain :10;
+  byte lobat :1;
 } Payload;
 
 Payload measurement;
@@ -88,6 +88,7 @@ if (rf12_crc == 0) {
   if (rf12_recvDone() && rf12_crc == 0 && rf12_len == sizeof (Payload)) {
     previousMillis=currentMillis;
     Serial.println("Rcvd data");
+    activityLed(0);
     if (tmp==0)
     {
       tmp=1;
@@ -98,21 +99,21 @@ if (rf12_crc == 0) {
     measurement= *(Payload*) rf12_data;
 
 Serial.print("Room ");
-Serial.print(measurement.light, DEC);
-lcd.setCursor(2,1);
-lcd.print(measurement.light);
-Serial.print (" ");
-Serial.print(measurement.wind, DEC);
-lcd.setCursor(8,1);
-lcd.print(measurement.wind);
+Serial.print(measurement.temp, DEC);
+lcd.setCursor(5,1);
+lcd.print(measurement.temp);
 Serial.print (" ");
 Serial.print(measurement.humi, DEC);
-lcd.setCursor(2,2);
+lcd.setCursor(11,1);
 lcd.print(measurement.humi);
 Serial.print (" ");
-Serial.print(measurement.temp, DEC);
-lcd.setCursor(8, 2);
-lcd.print(measurement.temp);
+Serial.print(measurement.wind, DEC);
+lcd.setCursor(5,2);
+lcd.print(measurement.wind);
+Serial.print (" ");
+Serial.print(measurement.rain, DEC);
+lcd.setCursor(11, 2);
+lcd.print(measurement.rain);
 Serial.print (" ");
 Serial.print(measurement.lobat, DEC);
 Serial.println();
@@ -134,7 +135,6 @@ Serial.println();
     if(rf12_data[0] >tmpHigh)
       tmpHigh=rf12_data[0];
 
-   
     // process data here
 
     else {
@@ -155,10 +155,9 @@ void greenLed()
   ledOne.digiWrite(1);
   ledTwo.digiWrite2(0);
   ledThree.digiWrite2(0); 
-  if (y==1 || r==1){
+  if (y==1){
     homeScreen(); 
     y=0; 
-    r=0;
     x=0;
   }
 }
@@ -168,10 +167,11 @@ void yellowLed()
   ledOne.digiWrite(0);
   ledTwo.digiWrite2(1);
   ledThree.digiWrite2(0);
-  if(y==0 || r==1)
-    yCount++;
-    
+  if(y==0){
+    yCount++;   
   lcd.clear();
+  }
+  
   lcd.setCursor(0, 0);
   lcd.print(F("Check sensor!"));
   lcd.setCursor(0, 1);
@@ -179,60 +179,30 @@ void yellowLed()
   lcd.setCursor(0, 2);
   lcd.print(F("recharging."));
   y=1;
-  r=0;
   x=0;
 }
 
-void redLed()
-{
-  ledOne.digiWrite(0);
-  ledTwo.digiWrite2(0);
-  ledThree.digiWrite2(1);
-  if(r==0 || y==1){
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print(F("Check temp!"));
-    lcd.setCursor(0, 1);
-    lcd.print(F("Current Temp:"));
-    lcd.setCursor(14, 1);
-    lcd.print(rf12_data[0]);
-    lcd.setCursor(17, 1);
-    lcd.print(F("F"));
-    r=1;
-    y=0;
-  }
-  
-   if (x==0){
-      x++;
-      for (int thisNote = 0; thisNote < 2; thisNote++) {
-        int noteDuration = 1000/noteDurations[thisNote];
-        tone(6, melody2[thisNote],noteDuration);//pin 6 or port 3 digital pin
-        int pauseBetweenNotes = noteDuration * 1.30;
-        delay(pauseBetweenNotes);
-        noTone(6);        
-      }
-  }
-}
+
 
 void homeScreen()
 {
  lcd.clear();
 lcd.print("Miller House");
 lcd.setCursor(0,1);
-lcd.print("L ");
+lcd.print("Temp");
 lcd.setCursor(6,1);
-lcd.print("M ");
+lcd.print("Humi");
 lcd.setCursor(0,2);
-lcd.print("H ");
+lcd.print("Wind");
 lcd.setCursor(6,2);
-lcd.print("T ");
+lcd.print("Rain");
 lcd.setCursor(0,3);
 lcd.print("Pkgs Rcvd: ");
 }
 
 
 static void activityLed (byte on) {
-#ifdef LED_PIN
+#ifdef LED_PIN =6;
 pinMode(LED_PIN, OUTPUT);
 digitalWrite(LED_PIN, !on);
 #endif
