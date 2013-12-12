@@ -17,17 +17,9 @@ LiquidCrystalI2C lcd (myI2C);
 int temp;
 int data;
 byte y =0;
-byte r = 0;
 byte x = 0;
-byte threshold= 34;
-byte threshold2= 95;
 int backlightSwitch;
-int tmpHigh;
-int tmpLow;
-byte tmp=0;
 int pkg1=0;
-int pkg2=0;
-int pkg3=0;
 int yCount = 0;
 
 typedef struct {
@@ -89,51 +81,34 @@ if (rf12_crc == 0) {
     previousMillis=currentMillis;
     Serial.println("Rcvd data");
     activityLed(0);
-    if (tmp==0)
-    {
-      tmp=1;
-      tmpLow=rf12_data[0];
-      tmpHigh=rf12_data[0];
-    }
     
     measurement= *(Payload*) rf12_data;
 
-Serial.print("Room ");
-Serial.print(measurement.temp, DEC);
-lcd.setCursor(5,1);
-lcd.print(measurement.temp);
-Serial.print (" ");
-Serial.print(measurement.humi, DEC);
-lcd.setCursor(11,1);
-lcd.print(measurement.humi);
-Serial.print (" ");
-Serial.print(measurement.wind, DEC);
-lcd.setCursor(5,2);
-lcd.print(measurement.wind);
-Serial.print (" ");
-Serial.print(measurement.rain, DEC);
-lcd.setCursor(11, 2);
-lcd.print(measurement.rain);
-Serial.print (" ");
-Serial.print(measurement.lobat, DEC);
-Serial.println();
+    Serial.print("Room ");
+    Serial.print(measurement.temp, DEC);
+    lcd.setCursor(5,1);
+    lcd.print(measurement.temp);
+    Serial.print (" ");
+    Serial.print(measurement.humi, DEC);
+     lcd.setCursor(11,1);
+    lcd.print(measurement.humi);
+    Serial.print (" ");
+    Serial.print(measurement.wind, DEC);
+    lcd.setCursor(5,2);
+    lcd.print(measurement.wind);
+    Serial.print (" ");
+    Serial.print(measurement.rain, DEC);
+    lcd.setCursor(11, 2);
+    lcd.print(measurement.rain);
+    Serial.print (" ");
+    Serial.print(measurement.lobat, DEC);
+    Serial.println();
 
     int* data = (int*) rf12_data;
     pkg1++;
     if (pkg1>999){
       pkg1=0;
-      pkg2++;
-      if(pkg2>999){
-        pkg2=0;
-        pkg3++;
-      }
     }
-
-    if(rf12_data[0] <tmpLow && rf12_data[0]>tmpLow-20)
-      tmpLow=rf12_data[0];
-
-    if(rf12_data[0] >tmpHigh)
-      tmpHigh=rf12_data[0];
 
     // process data here
 
