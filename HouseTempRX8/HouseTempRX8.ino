@@ -7,7 +7,7 @@
 
 #include <JeeLib.h>
 #include <PortsLCD.h>
-#include <avr/sleep.h>
+#include <avr/sleep.h> 
 
 Port ledOne (1);
 Port ledTwo (2);
@@ -30,6 +30,16 @@ int pkg2=0;
 int pkg3=0;
 int yCount = 0;
 
+typedef struct {
+byte light;
+byte wind :1;
+byte humi :7;
+int temp :10;
+byte lobat :1;
+} Payload;
+
+Payload measurement;
+
 unsigned long interval = 150000;
 unsigned long previousMillis;
 
@@ -42,6 +52,7 @@ int noteDurations[] = {
 
 void setup () {
   Serial.begin(57600);
+  Serial.print("Starting up....");
   lcd.begin(20, 4);
   homeScreen();
   ledOne.mode(OUTPUT); // digital pin for green led
@@ -71,15 +82,41 @@ void loop () {
     yellowLed();
     previousMillis=currentMillis;
   }
-
-  if (rf12_recvDone() && rf12_crc == 0) {
+if (rf12_crc == 0) {
+    activityLed(1);
+}
+  if (rf12_recvDone() && rf12_crc == 0 && rf12_len == sizeof (Payload)) {
     previousMillis=currentMillis;
+    Serial.println("Rcvd data");
     if (tmp==0)
     {
       tmp=1;
       tmpLow=rf12_data[0];
       tmpHigh=rf12_data[0];
     }
+    
+    measurement= *(Payload*) rf12_data;
+
+Serial.print("Room ");
+Serial.print(measurement.light, DEC);
+lcd.setCursor(2,1);
+lcd.print(measurement.light);
+Serial.print (" ");
+Serial.print(measurement.wind, DEC);
+lcd.setCursor(8,1);
+lcd.print(measurement.wind);
+Serial.print (" ");
+Serial.print(measurement.humi, DEC);
+lcd.setCursor(2,2);
+lcd.print(measurement.humi);
+Serial.print (" ");
+Serial.print(measurement.temp, DEC);
+lcd.setCursor(8, 2);
+lcd.print(measurement.temp);
+Serial.print (" ");
+Serial.print(measurement.lobat, DEC);
+Serial.println();
+
     int* data = (int*) rf12_data;
     pkg1++;
     if (pkg1>999){
@@ -97,20 +134,14 @@ void loop () {
     if(rf12_data[0] >tmpHigh)
       tmpHigh=rf12_data[0];
 
-    if(rf12_data[0]<=threshold || rf12_data[0]>=threshold2)
-    {
-      redLed();
-    }
+   
     // process data here
 
     else {
       greenLed();
-      lcd.setCursor(14, 2);
-      lcd.print(rf12_data[0]);
-      lcd.setCursor(6, 3);
-      lcd.print(tmpHigh);
-      lcd.setCursor(15, 3);
-      lcd.print(tmpLow);
+     
+      lcd.setCursor(12, 3);
+      lcd.print(pkg1);
       //lcd.print((int) rf12_hdr);
     }
 
@@ -185,18 +216,26 @@ void redLed()
 
 void homeScreen()
 {
-  lcd.clear();
-  lcd.print(F("Miller House"));
-  lcd.setCursor(0, 1);
-  lcd.print(F("Temp Monitor"));
-  lcd.setCursor(0, 2);
-  lcd.print(F("Current Temp: "));
-  lcd.setCursor(0, 3);
-  lcd.print(F("High:"));
-  lcd.setCursor(10, 3);
-  lcd.print(F("Low:"));
+ lcd.clear();
+lcd.print("Miller House");
+lcd.setCursor(0,1);
+lcd.print("L ");
+lcd.setCursor(6,1);
+lcd.print("M ");
+lcd.setCursor(0,2);
+lcd.print("H ");
+lcd.setCursor(6,2);
+lcd.print("T ");
+lcd.setCursor(0,3);
+lcd.print("Pkgs Rcvd: ");
 }
 
 
+static void activityLed (byte on) {
+#ifdef LED_PIN
+pinMode(LED_PIN, OUTPUT);
+digitalWrite(LED_PIN, !on);
+#endif
 
+}
 

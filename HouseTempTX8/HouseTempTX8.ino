@@ -10,8 +10,24 @@ int radioIsOn=1;
 int finalValue=0;
 MilliTimer readoutTimer, aliveTimer;
 
+typedef struct {
+  byte light;
+  byte wind :1;
+  byte humi :7;
+  int temp :10;
+  byte lobat :1;
+} Payload;
+Payload measurement;
+
+
 void setup() {
-  tmp.mode2(INPUT);
+
+tmp.mode2(INPUT);
+measurement.light = 123;
+measurement.wind = 1;
+measurement.humi = 78;
+measurement.temp = finalValue;
+measurement.lobat = 0;
   rf12_initialize(1, RF12_433MHZ, 75);
   rf12_easyInit(15); // every 10 seconds send out pkg
   Serial.begin(57600);
@@ -19,7 +35,9 @@ void setup() {
 }
 
 void loop() {
-  value = tmp.anaRead();
+
+
+value = tmp.anaRead();
   set_sleep_mode(SLEEP_MODE_IDLE);
   sleep_mode();
   if (radioIsOn && rf12_easyPoll() == 0) {
@@ -29,8 +47,8 @@ void loop() {
   if (readoutTimer.poll(1000)) {
     calcTemp();
   }
-  byte sending = rf12_easySend(&finalValue, sizeof value);
-
+  //byte sending = rf12_easySend( 0,measurement, sizeof measurement);
+byte sending =  rf12_easySend(&measurement, sizeof measurement);
   if (aliveTimer.poll(60000)){
     sending = rf12_easySend(0, 0); // always returns 1
     Serial.println(F("Sending 'Alive' Message"));
@@ -39,6 +57,9 @@ void loop() {
     // make sure the radio is on again
     if (!radioIsOn)
       rf12_sleep(-1); // turn the radio back on
+      Serial.println("Sending data");
+      Serial.println(measurement.light);
+      Serial.print(measurement.wind);
     radioIsOn = 1;
   }
 }
@@ -58,5 +79,6 @@ void calcTemp(){
   Serial.print(F("Actual temp = "));
   Serial.println(finalValue);
 }
+
 
 
