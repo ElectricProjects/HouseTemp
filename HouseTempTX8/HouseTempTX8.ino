@@ -11,10 +11,10 @@ int finalValue=0;
 MilliTimer readoutTimer, aliveTimer;
 
 typedef struct {
-  byte light;
-  byte wind :1;
-  byte humi :7;
-  int temp :10;
+  byte temp;
+  byte humi :1;
+  byte wind :7;
+  int rain :10;
   byte lobat :1;
 } Payload;
 Payload measurement;
@@ -23,10 +23,10 @@ Payload measurement;
 void setup() {
 
 tmp.mode2(INPUT);
-measurement.light = 123;
-measurement.wind = 1;
-measurement.humi = 78;
-measurement.temp = finalValue;
+measurement.temp = 123;
+measurement.humi = 1;
+measurement.wind = 78;
+measurement.rain = finalValue;
 measurement.lobat = 0;
   rf12_initialize(1, RF12_433MHZ, 75);
   rf12_easyInit(15); // every 10 seconds send out pkg
@@ -35,8 +35,6 @@ measurement.lobat = 0;
 }
 
 void loop() {
-
-
 value = tmp.anaRead();
   set_sleep_mode(SLEEP_MODE_IDLE);
   sleep_mode();
@@ -59,7 +57,7 @@ byte sending =  rf12_easySend(&measurement, sizeof measurement);
       rf12_sleep(-1); // turn the radio back on
       Serial.println("Sending data");
       Serial.println(measurement.light);
-      Serial.print(measurement.wind);
+      Serial.println(measurement.wind);
     radioIsOn = 1;
   }
 }
