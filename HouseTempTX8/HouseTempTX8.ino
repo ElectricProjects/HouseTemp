@@ -23,7 +23,7 @@ Payload measurement;
 void setup() {
 
 tmp.mode2(INPUT);
-measurement.temp = 123;
+measurement.temp = finalValue;
 measurement.humi = 1;
 measurement.wind = 78;
 measurement.rain = finalValue;
@@ -56,7 +56,7 @@ byte sending =  rf12_easySend(&measurement, sizeof measurement);
     if (!radioIsOn)
       rf12_sleep(-1); // turn the radio back on
       Serial.println("Sending data");
-      Serial.println(measurement.light);
+      Serial.println(measurement.temp);
       Serial.println(measurement.wind);
     radioIsOn = 1;
   }
@@ -76,6 +76,7 @@ void calcTemp(){
   finalValue=temperatureF;
   Serial.print(F("Actual temp = "));
   Serial.println(finalValue);
+  measurement.temp=finalValue;
 }
 
 

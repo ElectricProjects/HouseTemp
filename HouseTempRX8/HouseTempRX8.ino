@@ -90,7 +90,7 @@ if (rf12_crc == 0) {
     lcd.print(measurement.temp);
     Serial.print (" ");
     Serial.print(measurement.humi, DEC);
-     lcd.setCursor(11,1);
+     lcd.setCursor(14,1);
     lcd.print(measurement.humi);
     Serial.print (" ");
     Serial.print(measurement.wind, DEC);
@@ -98,7 +98,7 @@ if (rf12_crc == 0) {
     lcd.print(measurement.wind);
     Serial.print (" ");
     Serial.print(measurement.rain, DEC);
-    lcd.setCursor(11, 2);
+    lcd.setCursor(14, 2);
     lcd.print(measurement.rain);
     Serial.print (" ");
     Serial.print(measurement.lobat, DEC);
@@ -165,15 +165,11 @@ void homeScreen()
 lcd.print("Miller House");
 lcd.setCursor(0,1);
 lcd.print("Temp");
-lcd.setCursor(6,1);
-<<<<<<< HEAD
-lcd.print("W ");
-=======
+lcd.setCursor(9,1);
 lcd.print("Humi");
->>>>>>> 92f25b26332ef5d172a1ee7ab34b81300cda905f
 lcd.setCursor(0,2);
 lcd.print("Wind");
-lcd.setCursor(6,2);
+lcd.setCursor(9,2);
 lcd.print("Rain");
 lcd.setCursor(0,3);
 lcd.print("Pkgs Rcvd: ");
