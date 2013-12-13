@@ -221,7 +221,7 @@ lcd.print("Miller House");
 lcd.setCursor(0,1);
 lcd.print("L ");
 lcd.setCursor(6,1);
-lcd.print("M ");
+lcd.print("W ");
 lcd.setCursor(0,2);
 lcd.print("H ");
 lcd.setCursor(6,2);
