@@ -25,8 +25,8 @@ void setup() {
 tmp.mode2(INPUT);
 measurement.temp = finalValue;
 measurement.humi = 1;
-measurement.wind = 78;
-measurement.rain = finalValue;
+measurement.wind = 7;
+measurement.rain = 0;
 measurement.lobat = 0;
   rf12_initialize(1, RF12_433MHZ, 75);
   rf12_easyInit(15); // every 10 seconds send out pkg
